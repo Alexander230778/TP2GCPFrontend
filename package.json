@@ -1,6 +1,6 @@
 {
   "name": "upc-cambios-vue",
-  "description": "A Vue.js project",
+  "rfc_Asunto": "A Vue.js project",
   "version": "1.0.0",
   "author": "Waldo J. <w.saccaco@gmail.com>",
   "private": true,
@@ -11,6 +11,7 @@
   "dependencies": {
     "bootstrap": "^4.0.0-beta.2",
     "bootstrap-vue": "^2.0.0-rc.8",
+    "dayjs": "^1.5.16",
     "popper.js": "^1.12.9",
     "vue": "^2.5.3",
     "vue-router": "^3.0.1"

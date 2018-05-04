@@ -5,20 +5,19 @@
 
                 <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-                <b-navbar-brand href="#">Indra</b-navbar-brand>
+                <b-navbar-brand href="#">
+                    <img :src="logo" alt="" height="80">
+                </b-navbar-brand>
 
                 <b-collapse is-nav id="nav_collapse">
 
-                    <b-navbar-nav>
-                        <b-button size="sm" variant="outline-success" class="" type="submit">Nuevo</b-button>
-                    </b-navbar-nav>
 
                     <!-- Right aligned nav items -->
                     <b-navbar-nav class="ml-auto">
 
                         <b-nav-form>
                             <b-form-input size="sm" class="mr-sm-2" type="text" placeholder="Buscar"/>
-                            <b-button size="sm" class="my-2 my-sm-0" variant="outline-primary" type="submit">
+                            <b-button size="sm" class="my-2 my-sm-0" variant="outline-light" type="submit">
                                 Buscar
                             </b-button>
                         </b-nav-form>
@@ -40,8 +39,14 @@
 </template>
 
 <script>
+    import imgLogo from './../assets/indra.png'
     export default {
-        name: "u-nav-bar-change"
+        name: "u-nav-bar-change",
+        data(){
+            return {
+                logo : imgLogo
+            }
+        }
     }
 </script>
 

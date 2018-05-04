@@ -167,59 +167,53 @@
                     </b-form-checkbox-group>
                 </b-form-group>
 
-                <div class="row">
-                    <div class="col">
-                        <b-form-group label="Recursos:"
-                                      breakpoint="md"
-                                      label-for="tipo">
-                            <b-form-select id="tipo"
-                                           :options="recursos"
-                                           required
-                                           v-model="form.recursos">
-                            </b-form-select>
-                        </b-form-group>
+                <form @submit="onSubmitResource">
+                    <div class="row">
+                        <div class="col">
+                            <b-form-group label="Recursos:"
+                                          breakpoint="md"
+                                          label-for="tipo">
+                                <b-form-select id="tipo"
+                                               :options="lists.resources"
+                                               required
+                                               v-model="model.resource.id">
+                                    <template slot="first">
+                                        <option :value="null" disabled>-- Seleccione un Recurso --</option>
+                                    </template>
+                                </b-form-select>
+                            </b-form-group>
+                        </div>
                     </div>
-                    <div class="col">
-                        <b-form-group label="Nivel Recursos:"
-                                      breakpoint="md"
-                                      label-for="tipo">
-                            <b-form-select id="tipo"
-                                           :options="nivelRecursos"
-                                           required
-                                           v-model="form.nivelRecursos">
-                            </b-form-select>
-                        </b-form-group>
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col col-5">
-                        <b-form-group label="Recursos:"
-                                      breakpoint="md"
-                                      label-for="tipo">
-                            <b-form-input type="number" placeholder="Cantidad"></b-form-input>
-                        </b-form-group>
+                    <div class="row">
+                        <div class="col col-5">
+                            <b-form-group label="Recursos:"
+                                          breakpoint="md"
+                                          label-for="tipo">
+                                <b-form-input type="number" v-model="model.resource.quantity" placeholder="Cantidad"></b-form-input>
+                            </b-form-group>
+                        </div>
+                        <div class="col col-4">
+                            <b-form-group label="Semanas:"
+                                          breakpoint="md"
+                                          label-for="tipo">
+                                <b-form-input type="number" v-model="model.resource.week" placeholder="Cantidad"></b-form-input>
+                            </b-form-group>
+                        </div>
+                        <div class="col col-3">
+                            <b-form-group label=":"
+                                          label-for="tipo">
+                                <b-button type="submit" variant="outline-success">
+                                    Agregar
+                                </b-button>
+                            </b-form-group>
+                        </div>
                     </div>
-                    <div class="col col-4">
-                        <b-form-group label="Semanas:"
-                                      breakpoint="md"
-                                      label-for="tipo">
-                            <b-form-input type="number" placeholder="Cantidad"></b-form-input>
-                        </b-form-group>
-                    </div>
-                    <div class="col col-3">
-                        <b-form-group label=":"
-                                      label-for="tipo">
-                            <b-button variant="outline-success">
-                                Agregar
-                            </b-button>
-                        </b-form-group>
-                    </div>
-                </div>
+                </form>
 
                 <div class="row">
                     <div class="col">
-                        <b-table :items="items" responsive :fields="fields" caption-top :filter="filter" outlined>
+                        <b-table :items="tableResource" responsive :fields="fields" caption-top :filter="filter" outlined>
                             <template slot="first_name" slot-scope="data">
                                 <a :href="`#${data.value}`">
                                     {{data.value}}
@@ -231,13 +225,15 @@
                                     Eliminar
                                 </a>
                             </template>
-
+                            <template slot="table-caption">
+                                <strong>Presupuesto Aprox : </strong>  {{this.aprox}}
+                            </template>
                         </b-table>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col text-center">
-                        <b-button type="submit" variant="primary">Submit</b-button>
+                        <b-button type="submit" variant="primary">Guardar</b-button>
                     </div>
                     <div class="col text-center">
                         <b-button type="button" variant="danger">Cancelar</b-button>
@@ -272,6 +268,17 @@
                     { text: 'En Papel', value: '2' }
                 ],
 
+                lists : {
+                    resources : []
+                },
+                model : {
+                    resource : {
+                        id : null,
+                        quantity: 0,
+                        week : 0
+                    }
+                },
+                tableResource : [],
                 form: {
                     email: '',
                     name: '',
@@ -280,7 +287,7 @@
                     checked: [],
                     text: '',
                     recursos: '',
-                    nivelRecurso : ''
+                    nivelRecurso: ''
                 },
                 priority: [
                     {
@@ -294,71 +301,67 @@
                     },
                     'Nivel I', 'Nivel II', 'Nivel III', 'Nivel IV'
                 ],
-                recursos : [
+                recursos: [
                     {
-                        text: 'Buscar Recurso', value: '', selected : ''
+                        text: 'Buscar Recurso', value: '', selected: ''
                     },
                     'Front-End', 'Backend', 'Analista', 'DBA', 'QA', 'UX Design'
                 ],
-                nivelRecursos : [
+                nivelRecursos: [
                     {
-                        text: 'Buscar Nivel', value: '', selected : ''
+                        text: 'Buscar Nivel', value: '', selected: ''
                     },
                     'Senior', 'Medium', 'Basic'
                 ],
                 types: [
-                    { text: 'Tipo', value: '', selected : '' },
+                    { text: 'Tipo', value: '', selected: '' },
                     'Funcional', 'No Funcional'
                 ],
 
-                fields: [,
-                    {
+                fields: [{
+                    key: 'tip_Nombre',
+                    label: 'Recurso'
+                }, {
+                    key: 'niv_Nivel',
+                    label: 'Nivel'
+                }, {
+                    key: 'week',
+                    label: 'Q'
+                },{
+                    key: 'quantity',
+                    label: 'Sem'
+                }, {
                         key: 'opcion',
+                        label: 'Opción',
                         formatter: ( value, key, item ) => {
                             return 'flujo'
                         }
                     }],
-                items: [
-                    { age: 40, first_name: 'Dickerson', last_name: 'Macdonald' },
-                    { age: 21, first_name: 'Larsen', last_name: 'Shaw' },
-                    { age: 89, first_name: 'Geneva', last_name: 'Wilson' }
-                ],
                 changed: [],
                 filter: null,
                 modalShow: true,
-                // GPP_Proyecto_pro_Codigo
-                // acci
-                // est_Estado
-                // lir_Codigo
-                // lir_Fecha
-                // lir_NivelDoc
-                // lir_Nombre
-                // lir_Presupuesto
-                // lir_Resumen
-                // lir_TipoPublicacion
-                // lir_semanaMax
 
 
                 project: {
                     fields: [{
-                        key : 'lir_Codigo',
-                        label : 'Código',
-                        formatter(value, key, item ){
+                        key: 'lir_Codigo',
+                        label: 'Código',
+                        formatter( value, key, item ) {
                             return `REQ0${item.lir_Codigo}`
                         }
                     }, {
-                        key : 'lir_Nombre',
-                        label : 'Nombre'
+                        key: 'lir_Nombre',
+                        label: 'Nombre'
                     }, {
                         key: 'lir_Prioridad',
                         label: 'Prioridad'
                     }, {
-                        key : 'est_Estado',
-                        label : 'Estado'
+                        key: 'est_Estado',
+                        label: 'Estado'
                     },
                         {
                             key: 'lir_Fecha',
-                            label : 'Fecha',
+                            label: 'Fecha',
                             formatter: ( value, key, item ) => {
                                 return new Date( item.lir_Fecha ).toLocaleDateString()
                             }
@@ -379,6 +382,13 @@
                 }
             }
         },
+        computed : {
+            aprox(){
+                return this.tableResource.reduce((previousValue, currentValue) => {
+                    return previousValue + (currentValue.tip_Costo * currentValue.quantity * (currentValue.week / 4))
+                }, 0);
+            }
+        },
         methods: {
             showModal( name ) {
                 this.$refs.myModalRef.show()
@@ -389,6 +399,23 @@
             onSubmit( evt ) {
                 evt.preventDefault();
                 alert( JSON.stringify( this.form ) );
+            },
+            onSubmitResource(evt){
+                evt.preventDefault();
+                let {id : {niv_Nivel, tip_Nombre, tip_Costo}, week, quantity} = this.model.resource;
+                let item = {
+                    niv_Nivel,
+                    tip_Nombre,
+                    week,
+                    quantity,
+                    tip_Costo
+                };
+                this.tableResource.push(item)
+                this.model.resource = {
+                    id : null,
+                    quantity: 0,
+                    week : 0
+                }
             },
             onReset( evt ) {
                 evt.preventDefault();
@@ -402,14 +429,24 @@
                 this.$nextTick( () => {
                     this.show = true
                 } );
+            },
+            fetchRequeriments(){
+                this.http( 'C0001G0002', 'POST', { rfc_Codigo: this.$route.params.id }, ( response ) => {
+                    Object.assign( this.project, response );
+                } );
+            },
+            fetchResources(){
+                this.http( 'C0007G0001', 'POST', {  }, ( responses ) => {
+                    this.lists.resources = responses.map((_response) => {
+                        _response.value = _response
+                        return _response;
+                    })
+                } );
             }
         },
         created() {
-            this.http( 'C0001G0002', 'POST', { rfc_Codigo: this.$route.params.id }, ( response ) => {
-
-                Object.assign( this.project, response );
-                console.log( this.project.LST_REQU )
-            } );
+            this.fetchRequeriments();
+            this.fetchResources();
         }
 
     }
