@@ -2,7 +2,7 @@ export default {
     methods: {
         http(pathName, method = 'GET', body = {},callback){
 
-            let _url = `http://10.11.140.233/${pathName}`;
+            let _url = `http://192.168.1.8/${pathName}`;
             if(method === 'GET'){
                 _url = new URL(_url);
                 Object.keys(body).forEach(key => _url.searchParams.append(key, body[key]))

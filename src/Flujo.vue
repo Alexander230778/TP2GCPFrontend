@@ -68,7 +68,7 @@
 
                                             <template slot="opcion" slot-scope="data">
                                                 <a :href="`javascript:void(0)`" @click="showModal('waldo', '$event')">
-                                                    Flujo
+                                                    Editar
                                                 </a>
                                             </template>
 
@@ -129,7 +129,7 @@
                     <b-form-select id="prioridad"
                                    :options="priority"
                                    required
-                                   v-model="form.nivel">
+                                   v-model="form.priority">
                         <template slot="first">
                             <option :value="null" disabled>-- Seleccione prioridad --</option>
                         </template>
@@ -164,17 +164,13 @@
                     <b-form-select id="tipo"
                                    :options="doctype"
                                    required
-                                   :v-model="null">
+                                   v-model="form.nivel">
                         <template slot="first">
                             <option :value="null" disabled>-- Seleccione Documentación --</option>
                         </template>
                     </b-form-select>
                 </b-form-group>
 
-                <b-form-group label="Debe Estar">
-                    <b-form-checkbox-group v-model="selected" name="flavour1" :options="options">
-                    </b-form-checkbox-group>
-                </b-form-group>
                 <fieldset class="field-custom">
                     <legend>Recursos:</legend>
                     <form @submit="onSubmitResource">
@@ -243,6 +239,23 @@
                 </fieldset>
 
                 <div class="row">
+                    <div class="col col-6">
+                        <b-form-group label="Monto máximo :"
+                                      breakpoint="md"
+                                      label-for="tipo">
+                            <b-form-input type="number" :min="1" v-model="model.resource.quantity" placeholder="Cantidad"></b-form-input>
+                        </b-form-group>
+                    </div>
+                    <div class="col col-6">
+                        <b-form-group label="Semanas máximas :"
+                                      breakpoint="md"
+                                      label-for="tipo">
+                            <b-form-input type="number" :min="1" v-model="model.resource.week" placeholder="Cantidad"></b-form-input>
+                        </b-form-group>
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="col text-center">
                         <b-button type="submit" variant="primary">Guardar</b-button>
                     </div>
@@ -298,18 +311,13 @@
                     checked: [],
                     text: '',
                     recursos: '',
-                    nivelRecurso: ''
+                    nivelRecurso: '',
+                    priority: null
                 },
                 priority: [
-                    {
-                        text: 'Prioridad', value: null
-                    },
                     'Alta', 'Media', 'Baja'
                 ],
                 doctype: [
-                    {
-                        text: 'Nivel Documentación', value: null
-                    },
                     'Nivel I', 'Nivel II', 'Nivel III', 'Nivel IV'
                 ],
                 recursos: [
