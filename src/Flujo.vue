@@ -130,6 +130,9 @@
                                    :options="priority"
                                    required
                                    v-model="form.nivel">
+                        <template slot="first">
+                            <option :value="null" disabled>-- Seleccione prioridad --</option>
+                        </template>
                     </b-form-select>
                 </b-form-group>
 
@@ -139,6 +142,9 @@
                                    :options="types"
                                    required
                                    v-model="form.tipo">
+                        <template slot="first">
+                            <option :value="null" disabled>-- Seleccione Tipo --</option>
+                        </template>
                     </b-form-select>
                 </b-form-group>
 
@@ -158,7 +164,10 @@
                     <b-form-select id="tipo"
                                    :options="doctype"
                                    required
-                                   v-model="form.food2">
+                                   :v-model="null">
+                        <template slot="first">
+                            <option :value="null" disabled>-- Seleccione Documentación --</option>
+                        </template>
                     </b-form-select>
                 </b-form-group>
 
@@ -166,71 +175,73 @@
                     <b-form-checkbox-group v-model="selected" name="flavour1" :options="options">
                     </b-form-checkbox-group>
                 </b-form-group>
+                <fieldset class="field-custom">
+                    <legend>Recursos:</legend>
+                    <form @submit="onSubmitResource">
+                        <div class="row">
+                            <div class="col">
+                                <b-form-group
+                                              breakpoint="md"
+                                              label-for="tipo">
+                                    <b-form-select id="tipo"
+                                                   :options="lists.resources"
+                                                   required
+                                                   v-model="model.resource.id">
+                                        <template slot="first">
+                                            <option :value="null" disabled>-- Seleccione un Recurso --</option>
+                                        </template>
+                                    </b-form-select>
+                                </b-form-group>
+                            </div>
+                        </div>
 
-                <form @submit="onSubmitResource">
+                        <div class="row">
+                            <div class="col col-5">
+                                <b-form-group label="Recursos:"
+                                              breakpoint="md"
+                                              label-for="tipo">
+                                    <b-form-input type="number" :min="1" v-model="model.resource.quantity" placeholder="Cantidad"></b-form-input>
+                                </b-form-group>
+                            </div>
+                            <div class="col col-4">
+                                <b-form-group label="Semanas:"
+                                              breakpoint="md"
+                                              label-for="tipo">
+                                    <b-form-input type="number" :min="1" v-model="model.resource.week" placeholder="Cantidad"></b-form-input>
+                                </b-form-group>
+                            </div>
+                            <div class="col col-3">
+                                <b-form-group label=":"
+                                              label-for="tipo">
+                                    <b-button type="submit" variant="outline-success">
+                                        Agregar
+                                    </b-button>
+                                </b-form-group>
+                            </div>
+                        </div>
+                    </form>
                     <div class="row">
                         <div class="col">
-                            <b-form-group label="Recursos:"
-                                          breakpoint="md"
-                                          label-for="tipo">
-                                <b-form-select id="tipo"
-                                               :options="lists.resources"
-                                               required
-                                               v-model="model.resource.id">
-                                    <template slot="first">
-                                        <option :value="null" disabled>-- Seleccione un Recurso --</option>
-                                    </template>
-                                </b-form-select>
-                            </b-form-group>
+                            <b-table :items="tableResource" responsive :fields="fields" caption-top :filter="filter" outlined>
+                                <template slot="first_name" slot-scope="data">
+                                    <a :href="`#${data.value}`">
+                                        {{data.value}}
+                                    </a>
+                                </template>
+
+                                <template slot="opcion" slot-scope="data">
+                                    <a :href="`javascript:void(0)`" @click="deleteResources(data)">
+                                        Eliminar
+                                    </a>
+                                </template>
+                                <template slot="table-caption">
+                                    <strong>Presupuesto Aprox : </strong>  {{this.aprox}}
+                                </template>
+                            </b-table>
                         </div>
                     </div>
+                </fieldset>
 
-                    <div class="row">
-                        <div class="col col-5">
-                            <b-form-group label="Recursos:"
-                                          breakpoint="md"
-                                          label-for="tipo">
-                                <b-form-input type="number" v-model="model.resource.quantity" placeholder="Cantidad"></b-form-input>
-                            </b-form-group>
-                        </div>
-                        <div class="col col-4">
-                            <b-form-group label="Semanas:"
-                                          breakpoint="md"
-                                          label-for="tipo">
-                                <b-form-input type="number" v-model="model.resource.week" placeholder="Cantidad"></b-form-input>
-                            </b-form-group>
-                        </div>
-                        <div class="col col-3">
-                            <b-form-group label=":"
-                                          label-for="tipo">
-                                <b-button type="submit" variant="outline-success">
-                                    Agregar
-                                </b-button>
-                            </b-form-group>
-                        </div>
-                    </div>
-                </form>
-
-                <div class="row">
-                    <div class="col">
-                        <b-table :items="tableResource" responsive :fields="fields" caption-top :filter="filter" outlined>
-                            <template slot="first_name" slot-scope="data">
-                                <a :href="`#${data.value}`">
-                                    {{data.value}}
-                                </a>
-                            </template>
-
-                            <template slot="opcion" slot-scope="data">
-                                <a :href="`javascript:void(0)`" @click="showModal('waldo', '$event')">
-                                    Eliminar
-                                </a>
-                            </template>
-                            <template slot="table-caption">
-                                <strong>Presupuesto Aprox : </strong>  {{this.aprox}}
-                            </template>
-                        </b-table>
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col text-center">
                         <b-button type="submit" variant="primary">Guardar</b-button>
@@ -282,8 +293,8 @@
                 form: {
                     email: '',
                     name: '',
-                    tipo: '',
-                    nivel: '',
+                    tipo: null,
+                    nivel: null,
                     checked: [],
                     text: '',
                     recursos: '',
@@ -442,6 +453,9 @@
                         return _response;
                     })
                 } );
+            },
+            deleteResources(item){
+                this.tableResource.splice(item.index, 1);
             }
         },
         created() {
@@ -453,5 +467,13 @@
 </script>
 
 <style scoped>
-
+.field-custom{
+    padding: 10px;
+    border: 1px solid #b3b3b3;
+    margin-bottom: 10px;
+}
+.field-custom legend{
+    width: auto;
+    font-size: inherit;
+}
 </style>
