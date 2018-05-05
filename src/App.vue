@@ -7,28 +7,30 @@
         </div>
 
         <div class="row top">
-            <b-card-group deck class="mb-3">
-                <b-card v-for="component in components" v-bind:title="component.title"
-                        v-bind:img-src="component.urlImage"
-                        img-alt="Image"
-                        img-top
-                        tag="article"
-                        style="max-width: 20rem;"
-                        class="mb-2">
+            <div class="col-12">
+                <b-card-group deck class="mb-3">
+                    <b-card v-for="component in components" v-bind:title="component.title"
+                            v-bind:img-src="component.urlImage"
+                            img-alt="Image"
+                            img-top
+                            tag="article"
+                            style="max-width: 20rem;"
+                            class="mb-2">
 
-                    <p class="card-text">
-                        {{component.rfc_Asunto}}
-                    </p>
+                        <p class="card-text">
+                            {{component.rfc_Asunto}}
+                        </p>
 
-                    <div slot="footer">
-                        <router-link v-bind:to="component.link">
-                            <b-button variant="primary">Entrar</b-button>
-                        </router-link>
-                    </div>
+                        <div slot="footer">
+                            <router-link v-bind:to="component.link">
+                                <b-button variant="primary">Entrar</b-button>
+                            </router-link>
+                        </div>
 
 
-                </b-card>
-            </b-card-group>
+                    </b-card>
+                </b-card-group>
+            </div>
         </div>
     </div>
 </template>
@@ -80,5 +82,8 @@
     }
     .top {
         margin-top: 20px;
+    }
+    .navbar{
+        background-color: #00adc2 !important;
     }
 </style>

@@ -1,5 +1,15 @@
 <template>
+
     <div class="container">
+
+        <b-alert
+                :show="true"
+                dismissible
+                ref="messageAlert"
+                :class="{'warning-alert': true, 'animate': fetchError}"
+                variant="danger">
+            <p style="text-align: center">Hubo un Error con el Servicio</p>
+        </b-alert>
 
         <u-nav-bar-change/>
 
@@ -50,7 +60,7 @@
                                     <div class="col">
                                         <b-form-group label="."
                                                       label-for="nameRequest">
-                                            <b-button variant="outline-success" @click="showModal('Nuevo', '$event')">
+                                            <b-button variant="outline-success" @click="showModal('NUEVO', '$event')">
                                                 Nuevo
                                             </b-button>
                                         </b-form-group>
@@ -82,14 +92,9 @@
                                 </div>
                                 <div class="row">
                                     <div class="col col-12">
-                                        <b-table :items="changed" :fields="fields" caption-top :filter="filter"
+                                        <b-table :items="project.LST_REQURFC" :fields="project.fieldsRFC" caption-top
+                                                 :filter="filter"
                                                  outlined>
-
-                                            <template slot="first_name" slot-scope="data">
-                                                <a :href="`#${data.value}`">
-                                                    {{data.value}}
-                                                </a>
-                                            </template>
 
                                             <template slot="opcion" slot-scope="data">
                                                 <a :href="`#/${data.value}`">
@@ -118,7 +123,7 @@
                               label-for="nameRequest">
                     <b-form-input id="nameRequest"
                                   type="text"
-                                  v-model="form.email"
+                                  v-model="model.lir_Nombre"
                                   required
                                   placeholder="Ingresa Requerimiento">
                     </b-form-input>
@@ -127,9 +132,9 @@
                 <b-form-group label="Prioridad:"
                               label-for="prioridad">
                     <b-form-select id="prioridad"
-                                   :options="priority"
+                                   :options="lists.LST_PRIO"
                                    required
-                                   v-model="form.priority">
+                                   v-model="model.lir_Prioridad">
                         <template slot="first">
                             <option :value="null" disabled>-- Seleccione prioridad --</option>
                         </template>
@@ -139,9 +144,10 @@
                 <b-form-group label="Tipo:"
                               label-for="tipo">
                     <b-form-select id="tipo"
-                                   :options="types"
+                                   :options="lists.LST_TIPO"
                                    required
-                                   v-model="form.tipo">
+                                   v-model="model.lir_TipoPublicacion">
+
                         <template slot="first">
                             <option :value="null" disabled>-- Seleccione Tipo --</option>
                         </template>
@@ -151,7 +157,7 @@
                 <b-form-group label="¿Que va hacer el sistema?"
                               label-for="whatis">
                     <b-form-textarea id="whatis"
-                                     v-model="form.text"
+                                     v-model="model.lir_Resumen"
                                      placeholder="Describa lo que va hacer el sistema"
                                      :rows="3"
                                      :max-rows="6">
@@ -162,9 +168,9 @@
                 <b-form-group label="¿Cuanta documentación?:"
                               label-for="tipo">
                     <b-form-select id="tipo"
-                                   :options="doctype"
+                                   :options="lists.LST_NIVE"
                                    required
-                                   v-model="form.nivel">
+                                   v-model="model.lir_NivelDoc">
                         <template slot="first">
                             <option :value="null" disabled>-- Seleccione Documentación --</option>
                         </template>
@@ -177,8 +183,8 @@
                         <div class="row">
                             <div class="col">
                                 <b-form-group
-                                              breakpoint="md"
-                                              label-for="tipo">
+                                        breakpoint="md"
+                                        label-for="tipo">
                                     <b-form-select id="tipo"
                                                    :options="lists.resources"
                                                    required
@@ -196,14 +202,16 @@
                                 <b-form-group label="Recursos:"
                                               breakpoint="md"
                                               label-for="tipo">
-                                    <b-form-input type="number" :min="1" v-model="model.resource.quantity" placeholder="Cantidad"></b-form-input>
+                                    <b-form-input type="number" :min="1" v-model="model.resource.rec_Cantidad"
+                                                  placeholder="Cantidad"></b-form-input>
                                 </b-form-group>
                             </div>
                             <div class="col col-4">
                                 <b-form-group label="Semanas:"
                                               breakpoint="md"
                                               label-for="tipo">
-                                    <b-form-input type="number" :min="1" v-model="model.resource.week" placeholder="Cantidad"></b-form-input>
+                                    <b-form-input type="number" :min="1" v-model="model.resource.rec_Semanas"
+                                                  placeholder="Cantidad"></b-form-input>
                                 </b-form-group>
                             </div>
                             <div class="col col-3">
@@ -218,7 +226,8 @@
                     </form>
                     <div class="row">
                         <div class="col">
-                            <b-table :items="tableResource" responsive :fields="fields" caption-top :filter="filter" outlined>
+                            <b-table :items="model.LST_RECU" responsive :fields="fields" caption-top :filter="filter"
+                                     outlined>
                                 <template slot="first_name" slot-scope="data">
                                     <a :href="`#${data.value}`">
                                         {{data.value}}
@@ -231,7 +240,7 @@
                                     </a>
                                 </template>
                                 <template slot="table-caption">
-                                    <strong>Presupuesto Aprox : </strong>  {{this.aprox}}
+                                    <strong>Presupuesto Aprox : </strong> {{this.aprox}}
                                 </template>
                             </b-table>
                         </div>
@@ -243,23 +252,24 @@
                         <b-form-group label="Monto máximo :"
                                       breakpoint="md"
                                       label-for="tipo">
-                            <b-form-input type="number" :min="1" v-model="model.resource.quantity" placeholder="Cantidad"></b-form-input>
+                            <b-form-input type="number" :min="1" v-model="model.lir_Presupuesto"
+                                          placeholder="Cantidad"></b-form-input>
                         </b-form-group>
                     </div>
                     <div class="col col-6">
                         <b-form-group label="Semanas máximas :"
                                       breakpoint="md"
                                       label-for="tipo">
-                            <b-form-input type="number" :min="1" v-model="model.resource.week" placeholder="Cantidad"></b-form-input>
+                            <b-form-input type="number" :min="1" v-model="model.lir_semanaMax"
+                                          placeholder="Cantidad"></b-form-input>
                         </b-form-group>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col text-center">
                         <b-button type="submit" variant="primary">Guardar</b-button>
                     </div>
-                    <div class="col text-center">
+                    <div class="col text-center" v-if="!isNew">
                         <b-button type="button" variant="danger">Cancelar</b-button>
                     </div>
                     <div class="col text-center">
@@ -284,25 +294,62 @@
             UNavBarChange
         },
         data() {
+
+            let templateFieldRFC = [{
+                key: 'lir_Codigo',
+                label: 'Código',
+                formatter( value, key, item ) {
+                    return `REQ0${item.lir_Codigo}`
+                }
+            }, {
+                key: 'lir_Nombre',
+                label: 'Nombre'
+            }, {
+                key: 'lir_Prioridad',
+                label: 'Prioridad'
+            }, {
+                key: 'est_Estado',
+                label: 'Estado'
+            },
+                {
+                    key: 'lir_Fecha',
+                    label: 'Fecha',
+                    formatter: ( value, key, item ) => {
+                        return new Date( item.lir_Fecha ).toLocaleDateString()
+                    }
+                }];
+
             return {
-
+                isNew : false,
+                fetchError: false,
                 selected: 'first',
-                options: [
-                    { text: 'En Linea', value: '1' },
-                    { text: 'En Papel', value: '2' }
-                ],
-
-                lists : {
-                    resources : []
+                lists: {
+                    resources: [],
+                    LST_TIPO: [],
+                    LST_PRIO: [],
+                    LST_NIVE: []
                 },
-                model : {
-                    resource : {
-                        id : null,
-                        quantity: 0,
-                        week : 0
+                model: {
+
+                    lir_Codigo: null,
+                    lir_Fecha: null,
+                    lir_Nombre: null,
+                    lir_Resumen: null,
+                    lir_NivelDoc: null,
+                    lir_TipoPublicacion: null,
+                    lir_semanaMax: null,
+                    lir_Presupuesto: null,
+                    rfc_Codigo: this.$route.params.id,
+                    lir_Prioridad: null,
+
+                    LST_RECU: [],
+
+                    resource: {
+                        tip_Codigo: null,
+                        rec_Cantidad: 0,
+                        rec_Semanas: 0
                     }
                 },
-                tableResource : [],
                 form: {
                     email: '',
                     name: '',
@@ -314,102 +361,63 @@
                     nivelRecurso: '',
                     priority: null
                 },
-                priority: [
-                    'Alta', 'Media', 'Baja'
-                ],
-                doctype: [
-                    'Nivel I', 'Nivel II', 'Nivel III', 'Nivel IV'
-                ],
-                recursos: [
-                    {
-                        text: 'Buscar Recurso', value: '', selected: ''
-                    },
-                    'Front-End', 'Backend', 'Analista', 'DBA', 'QA', 'UX Design'
-                ],
-                nivelRecursos: [
-                    {
-                        text: 'Buscar Nivel', value: '', selected: ''
-                    },
-                    'Senior', 'Medium', 'Basic'
-                ],
-                types: [
-                    { text: 'Tipo', value: '', selected: '' },
-                    'Funcional', 'No Funcional'
-                ],
 
-                fields: [{
+                fields:  [{
                     key: 'tip_Nombre',
                     label: 'Recurso'
                 }, {
                     key: 'niv_Nivel',
                     label: 'Nivel'
                 }, {
-                    key: 'week',
+                    key: 'rec_Semanas', //week
                     label: 'Q'
-                },{
-                    key: 'quantity',
-                    label: 'Sem'
                 }, {
-                        key: 'opcion',
-                        label: 'Opción',
-                        formatter: ( value, key, item ) => {
-                            return 'flujo'
-                        }
-                    }],
-                changed: [],
+                    key: 'rec_Cantidad', //quantity
+                    label: 'Sem'
+                },{
+                    key: 'opcion',
+                    label: 'Opción',
+                    formatter: ( value, key, item ) => {
+                        return 'flujo'
+                    }
+                }],
+
                 filter: null,
                 modalShow: true,
 
 
                 project: {
-                    fields: [{
-                        key: 'lir_Codigo',
-                        label: 'Código',
-                        formatter( value, key, item ) {
-                            return `REQ0${item.lir_Codigo}`
+                    fieldsRFC: [...templateFieldRFC],
+                    fields: [...templateFieldRFC, ...[{
+                        key: 'opcion',
+                        label: 'Opción',
+                        formatter: ( value, key, item ) => {
+                            return 'flujo'
                         }
-                    }, {
-                        key: 'lir_Nombre',
-                        label: 'Nombre'
-                    }, {
-                        key: 'lir_Prioridad',
-                        label: 'Prioridad'
-                    }, {
-                        key: 'est_Estado',
-                        label: 'Estado'
-                    },
-                        {
-                            key: 'lir_Fecha',
-                            label: 'Fecha',
-                            formatter: ( value, key, item ) => {
-                                return new Date( item.lir_Fecha ).toLocaleDateString()
-                            }
-                        },
-                        {
-                            key: 'opcion',
-                            label: 'Opción',
-                            formatter: ( value, key, item ) => {
-                                return 'flujo'
-                            }
-                        }],
+                    }] ],
                     rfc_Descripcion: '..',
                     per_Nombre: '..',
                     per_Email: '..',
                     por_Nombre: '..',
                     pro_Nombre: '..',
-                    LST_REQU: []
+                    LST_REQU: [],
+                    LST_REQURFC: []
                 }
             }
         },
-        computed : {
-            aprox(){
-                return this.tableResource.reduce((previousValue, currentValue) => {
-                    return previousValue + (currentValue.tip_Costo * currentValue.quantity * (currentValue.week / 4))
-                }, 0);
+        computed: {
+            aprox() {
+                return this.model.LST_RECU.reduce( ( previousValue, currentValue ) => {
+                    return previousValue + (currentValue.tip_Costo * currentValue.rec_Cantidad * (currentValue.rec_Semanas / 4))
+                }, 0 );
             }
         },
         methods: {
             showModal( name ) {
+                this.isNew = false;
+                if(name === "NUEVO"){
+                    this.isNew = true;
+                }
                 this.$refs.myModalRef.show()
             },
             hideModal() {
@@ -417,23 +425,30 @@
             },
             onSubmit( evt ) {
                 evt.preventDefault();
-                alert( JSON.stringify( this.form ) );
+
+                this.http( 'C0002S0002', 'POST', this.model, ( response ) => {
+                    if ( response === "OK" ) {
+                        this.fetchRequeriments();
+                        this.hideModal();
+                    }
+                } )
             },
-            onSubmitResource(evt){
+            onSubmitResource( evt ) {
                 evt.preventDefault();
-                let {id : {niv_Nivel, tip_Nombre, tip_Costo}, week, quantity} = this.model.resource;
+                let { id: { niv_Nivel, tip_Nombre, tip_Costo, tip_Codigo }, rec_Semanas, rec_Cantidad } = this.model.resource;
                 let item = {
                     niv_Nivel,
                     tip_Nombre,
-                    week,
-                    quantity,
-                    tip_Costo
+                    rec_Semanas,
+                    rec_Cantidad,
+                    tip_Costo,
+                    tip_Codigo
                 };
-                this.tableResource.push(item)
+                this.model.LST_RECU.push( item );
                 this.model.resource = {
-                    id : null,
-                    quantity: 0,
-                    week : 0
+                    id: null,
+                    rec_Cantidad: 0,
+                    rec_Semanas: 0
                 }
             },
             onReset( evt ) {
@@ -449,39 +464,82 @@
                     this.show = true
                 } );
             },
-            fetchRequeriments(){
-                this.http( 'C0001G0002', 'POST', { rfc_Codigo: this.$route.params.id }, ( response ) => {
+            fetchRequerimentsRFC() {
+                this.fetchError = false;
+                this.http( 'C0002G0004', 'POST', { rfc_Codigo: +this.$route.params.id }, ( response ) => {
+                    this.project.LST_REQURFC = response;
+                }, () => {
+                    this.fetchError = true;
+                } );
+            },
+            fetchRequeriments() {
+                this.fetchError = false;
+                this.http( 'C0001G0002', 'POST', { rfc_Codigo: +this.$route.params.id }, ( response ) => {
                     Object.assign( this.project, response );
+                }, () => {
+                    this.fetchError = true;
                 } );
             },
-            fetchResources(){
-                this.http( 'C0007G0001', 'POST', {  }, ( responses ) => {
-                    this.lists.resources = responses.map((_response) => {
-                        _response.value = _response
-                        return _response;
-                    })
+
+            fetchModal() {
+                this.http( 'C0008G0001', 'POST', {}, ( response ) => {
+                    Object.assign( this.lists, response );
                 } );
             },
-            deleteResources(item){
-                this.tableResource.splice(item.index, 1);
+            fetchResources() {
+                this.fetchError = false;
+                this.http( 'C0007G0001', 'POST', {}, ( responses ) => {
+                    this.lists.resources = responses.map( ( _response ) => {
+                        return Object.assign( {}, _response, {
+                            value: _response,
+                            tip_Codigo: _response.value
+                        } );
+                    } )
+                }, () => {
+                    this.fetchError = true;
+                } );
+            },
+            deleteResources( item ) {
+                this.model.LST_RECU.splice( item.index, 1 );
             }
         },
         created() {
             this.fetchRequeriments();
+            this.fetchRequerimentsRFC();
             this.fetchResources();
+            this.fetchModal();
         }
 
     }
 </script>
 
 <style scoped>
-.field-custom{
-    padding: 10px;
-    border: 1px solid #b3b3b3;
-    margin-bottom: 10px;
-}
-.field-custom legend{
-    width: auto;
-    font-size: inherit;
-}
+    .field-custom {
+        padding: 10px;
+        border: 1px solid #b3b3b3;
+        margin-bottom: 10px;
+    }
+
+    .field-custom legend {
+        width: auto;
+        font-size: inherit;
+    }
+
+    .alert {
+        opacity: 0;
+    }
+
+    .warning-alert {
+        position: absolute;
+        right: 50%;
+        transform: translate3d(50%, 10%, 0);
+        z-index: 2;
+        width: 50%;
+        transition: transform 1500ms ease-out, opacity 3500ms;
+    }
+
+    .warning-alert.animate {
+        transform: translate3d(50%, 100%, 0);
+        opacity: 1;
+    }
 </style>
