@@ -92,7 +92,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col col-12">
-                                        <b-table :items="project.LST_REQURFC" :fields="project.fieldsRFC" caption-top
+                                        <b-table responsive :items="project.LST_REQURFC" :fields="project.fieldsRFC" caption-top
                                                  :filter="filter"
                                                  outlined>
 

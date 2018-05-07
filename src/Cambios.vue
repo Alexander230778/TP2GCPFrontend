@@ -2,10 +2,19 @@
     <div class="container cambios">
 
         <u-nav-bar-change/>
-
         <div class="row">
             <div class="col col-12">
-                <b-table :items="items" :fields="fields" caption-top :filter="filter" outlined>
+                <b-form-group label=" "
+                              label-for="nameRequest">
+                    <b-button size="sm" variant="outline-dark" @click="showModal('Nuevo', '$event')">
+                        Nuevo
+                    </b-button>
+                </b-form-group>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-12">
+                <b-table responsive :items="items" :fields="fields" caption-top :filter="filter" outlined>
 
                     <template slot="opcion" slot-scope="data">
                         <a :href="`#/flujo/${data.item.rfc_Codigo}`">
@@ -19,11 +28,6 @@
 
                     <template slot="table-caption">
                         <div class="row">
-                            <div class="col">
-                                <b-button size="sm" variant="outline-dark" @click="showModal('Nuevo', '$event')">
-                                    Nuevo
-                                </b-button>
-                            </div>
                             <div class="col">
                                 <b-form-group horizontal label="Filtrar" class="mb-0">
                                     <b-form-input v-model="filter" placeholder="Escribe para filtrar"/>
