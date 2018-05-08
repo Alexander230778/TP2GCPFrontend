@@ -273,7 +273,7 @@
                         <b-button type="button" variant="danger">Cancelar</b-button>
                     </div>
                     <div class="col text-center">
-                        <b-button type="close" variant="outline-success" @click="hideModal">Close</b-button>
+                        <b-button type="close" variant="primary" @click="hideModal">Close</b-button>
                     </div>
                 </div>
             </b-form>

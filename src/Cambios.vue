@@ -120,7 +120,7 @@
                             <b-button type="submit" variant="primary">Guardar</b-button>
                         </div>
                         <div class="col text-center">
-                            <b-button type="button" variant="danger" @click="hideModal">Cerrar</b-button>
+                            <b-button type="button" variant="primary" @click="hideModal">Cerrar</b-button>
                         </div>
                     </div>
                 </fieldset>

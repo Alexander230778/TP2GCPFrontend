@@ -8,14 +8,14 @@
 
         <div class="row top">
             <div class="col-12">
-                <b-card-group deck class="mb-3">
+                <b-card-group deck class="">
                     <b-card v-for="component in components" v-bind:title="component.title"
                             v-bind:img-src="component.urlImage"
                             img-alt="Image"
                             img-top
                             tag="article"
                             style="max-width: 20rem;"
-                            class="mb-2">
+                            class="">
 
                         <p class="card-text">
                             {{component.rfc_Asunto}}
@@ -42,7 +42,7 @@
         components: { UNavBar },
         name: 'app',
         data: () => {
-            let url = 'https://lorempixel.com/600/300/';
+            let url = '';
             return {
                 components: [
                     {
