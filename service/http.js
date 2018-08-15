@@ -2,7 +2,7 @@ export default {
     methods: {
         http( pathName, method = 'GET', body = {}, callback, callbackError ) {
 
-            let _url = `http://10.11.140.54/${pathName}`;
+            let _url = `https://upctp3-des.azurewebsites.net/${pathName}`;
             if ( method === 'GET' ) {
                 _url = new URL( _url );
                 Object.keys( body ).forEach( key => _url.searchParams.append( key, body[key] ) )
@@ -16,9 +16,12 @@ export default {
                 method: method,
                 headers: myHeaders,
                 mode: 'cors',
-                cache: 'default',
-                body: method === "POST" && JSON.stringify( body )
+                cache: 'default'
             };
+
+          if (method === 'POST') {
+            myInit.body = JSON.stringify( body );
+          }
 
             let myRequest = new Request( _url, myInit );
 
